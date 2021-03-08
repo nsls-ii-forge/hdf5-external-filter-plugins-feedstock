@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bc52251..aac318a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,7 +98,6 @@ if(CMAKE_SYSTEM_NAME MATCHES Windows)
+     set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_PLUGINDIR})
+    
+     #ensure that runtime libraries are installed along with the plugins 
+-    include(InstallRequiredSystemLibraries)    
+ else()
+     include(GNUInstallDirs)
+ 

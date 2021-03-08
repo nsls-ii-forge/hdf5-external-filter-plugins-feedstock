@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bc52251..8b279d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,21 +135,4 @@ endif()
+ #=============================================================================
+ # setting up the MSI build for Windows
+ #=============================================================================
+-if(CMAKE_SYSTEM_NAME MATCHES Windows)
+-    set(RESOURCE_DIR ${PROJECT_SOURCE_DIR}/resources)
+-    set(CPACK_GENERATOR WIX)
+-    set(CPACK_PACKAGE_VENDOR "HDFGroup")
+-    set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+-    set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+-    set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+-
+-    set(CPACK_RESOURCE_FILE_LICENSE "${RESOURCE_DIR}/LICENSE.txt")
+-    set(CPACK_WIX_PATCH_FILE "${PROJECT_SOURCE_DIR}/hdf5_plugin_path_patch.xml")
+-
+-    install(FILES ${EXTERNAL_LIBRARIES} 
+-            DESTINATION ${CMAKE_INSTALL_PLUGINDIR})
+-
+-    include(CPack)
+-    include(CPackWIX)
+-endif()
+ 

@@ -1,0 +1,111 @@
+{% set name = "HDF5-External-Filter-Plugins" %}
+{% set version = "0.1.0" %}
+{% set sha256 = "3d0d93cb71e1f384e827fbc9808d72b0984195ab337cca697c66205e7c135b0d" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/nexusformat/{{ name }}/archive/v{{ version }}.tar.gz
+  sha256: {{ sha256 }}
+  patches:
+    - patches/0001-Disable-MSI-build.patch  # [win]
+    - patches/0002-Do-not-distribute-VC-runtimes.patch  # [win]
+
+build:
+  number: 0
+
+requirements:
+  run:
+    - {{ pin_subpackage(name|lower + '-bitshuffle', exact=True) }}
+    - {{ pin_subpackage(name|lower + '-bzip2', exact=True) }}
+    - {{ pin_subpackage(name|lower + '-lz4', exact=True) }}
+
+outputs:
+  - name: {{ name|lower + '-bitshuffle' }}
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake >=3.0.0
+        - conda-verify
+        - make  # [not win]
+      host:
+        - hdf5
+        - lz4-c
+      run:
+        - hdf5
+        - lz4-c
+    script: build-bitshuffle.sh  # [not win]
+    script: build-bitshuffle.bat  # [win]
+    test:
+      commands:
+        - test -f $PREFIX/lib/plugins/libh5bshuf.so                           # [not win]
+        - test -f $PREFIX/lib/hdf5/plugin/libh5bshuf.so                       # [not win]
+        - if not exist %PREFIX%\\lib\\plugins\\h5bshuf.dll exit 1             # [win]
+        - if not exist %PREFIX%\\lib\\hdf5\\plugin\\h5bshuf.dll exit 1        # [win]
+
+  - name: {{ name|lower + '-bzip2' }}
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake >=3.0.0
+        - conda-verify
+        - make  # [not win]
+      host:
+        - bzip2
+        - hdf5
+      run:
+        - bzip2
+    script: build-bzip2.sh  # [not win]
+    script: build-bzip2.bat  # [win]
+    test:
+      commands:
+        - test -f $PREFIX/lib/plugins/libh5bz2.so                        # [not win]
+        - test -f $PREFIX/lib/hdf5/plugin/libh5bz2.so                    # [not win]
+        - if not exist %PREFIX%\\lib\\plugins\\h5bz2.dll exit 1          # [win]
+        - if not exist %PREFIX%\\lib\\hdf5\\plugin\\h5bz2.dll exit 1     # [win]
+
+  - name: {{ name|lower + '-lz4' }}
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ compiler('cxx') }}
+        - cmake >=3.0.0
+        - conda-verify
+        - make  # [not win]
+      host:
+        - hdf5
+        - lz4-c
+      run:
+        - lz4-c
+    script: build-lz4.sh  # [not win]
+    script: build-lz4.bat  # [win]
+    test:
+      commands:
+        - test -f $PREFIX/lib/plugins/libh5lz4.so                      # [not win]
+        - test -f $PREFIX/lib/hdf5/plugin/libh5lz4.so                  # [not win]
+        - if not exist %PREFIX%\\lib\\plugins\\h5lz4.dll exit 1        # [win]
+        - if not exist %PREFIX%\\lib\\hdf5\\plugin\\h5lz4.dll exit 1   # [win]
+
+about:
+  home: https://github.com/nexusformat/HDF5-External-Filter-Plugins
+  license: MIT AND LicenseRef-HDF5 AND BSD-3-Clause
+  license_family: OTHER
+  license_file:
+    - licenses/bitshuffle.txt
+    - licenses/bzip2.txt
+    - licenses/bzip2-additional-legal.txt
+    - licenses/lz4.txt
+    - licenses/lz4-h5py-Copyrights-and-Licenses.txt
+  summary: |
+    Provides dynamically loadable compression filters for HDF5 that are
+    popular for photon or neutron science
+  description: |
+    The external filter mechanism introduced with HDF5 1.8.12 allows
+    applications to utilize custom filters not shipped by the HDF5
+    core library without recompiling your application. This package
+    provides external filters for HDF5 for the Bitshuffle, BZIP2,
+    and LZ4 compression algorithms.
