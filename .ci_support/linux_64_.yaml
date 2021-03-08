@@ -19,7 +19,7 @@ docker_image:
 hdf5:
 - 1.10.4
 lz4_c:
-- 1.9.3
+- 1.9.2
 pin_run_as_build:
   bzip2:
     max_pin: x
