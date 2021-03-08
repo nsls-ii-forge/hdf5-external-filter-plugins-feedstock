@@ -10,3 +10,5 @@ cxx_compiler_version:  # [linux]
   - 7                  # [linux]
 hdf5:
   - 1.10.4
+lz4_c:
+  - 1.9.2
